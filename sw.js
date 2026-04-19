@@ -1,10 +1,46 @@
-const cacheName = 'maki-quran-v1';
-const assets = ['./', './index.html'];
+const cacheName = "v1";
+const assets = ["./", "./index.html", "./style.css"];
 
-self.addEventListener('install', e => {
-  e.waitUntil(caches.open(cacheName).then(cache => cache.addAll(assets)));
+// التثبيت والكاش
+self.addEventListener("install", e => {
+    e.waitUntil(
+        caches.open(cacheName).then(cache => {
+            return cache.addAll(assets);
+        })
+    );
 });
 
-self.addEventListener('fetch', e => {
-  e.respondWith(fetch(e.request).catch(() => caches.match(e.request)));
+// تفعيل الخدمة وحذف الكاش القديم
+self.addEventListener("activate", e => {
+    e.waitUntil(
+        caches.keys().then(keys => {
+            return Promise.all(
+                keys.filter(key => key !== cacheName).map(key => caches.delete(key))
+            );
+        })
+    );
+});
+
+// استقبال إشعارات Push
+self.addEventListener('push', e => {
+    let data = { title: "تنبيه جديد", body: "لديك رسالة جديدة" };
+    try {
+        if (e.data) data = e.data.json();
+    } catch (err) {
+        data = { title: "تنبيه", body: e.data.text() };
+    }
+
+    const options = {
+        body: data.body,
+        icon: 'icon.png',
+        badge: 'badge.png',
+        vibrate: [200, 100, 200]
+    };
+    e.waitUntil(self.registration.showNotification(data.title, options));
+});
+
+// عند الضغط على الإشعار
+self.addEventListener('notificationclick', e => {
+    e.notification.close();
+    e.waitUntil(clients.openWindow('/'));
 });
