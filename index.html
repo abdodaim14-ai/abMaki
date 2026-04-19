@@ -4,10 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>مسابقة داعم المواهب للقران الكريم</title>
-
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#ffcc33">
-
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@700;900&family=Almarai:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css">
@@ -16,7 +12,7 @@
     <style>
         :root { --gold: #ffcc33; --gold-glow: rgba(255, 204, 51, 0.5); }
         
-        body {
+     body {
             font-family: 'Almarai', sans-serif;
             margin: 0; color: #fff;
             background: #000;
@@ -25,6 +21,7 @@
             position: relative;
         }
 
+        /* حاوية الخلفية المتحركة التفاعلية */
         #interactive-bg {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -43,6 +40,7 @@
         .site-name { font-family: 'Cairo'; color: var(--gold); font-size: 1.3rem; margin-top: 10px; }
         .quran-verse { font-family: 'Cairo'; font-size: 1.8rem; margin: 15px 0; color: #fff; font-weight: 900; text-shadow: 0 0 10px var(--gold-glow); }
 
+        /* قسم الرعاة الجديد */
         .sponsors-section { text-align: center; margin-bottom: 25px; background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 20px; border: 1px solid rgba(255, 204, 51, 0.3); }
         .sponsors-title { color: var(--gold); font-size: 0.85rem; margin-bottom: 10px; display: block; font-weight: bold; }
         .sponsors-logos { display: flex; justify-content: center; align-items: center; gap: 20px; }
@@ -57,6 +55,7 @@
         .time-display { font-size: 1.1rem; color: var(--gold); font-weight: 900; letter-spacing: 1px; }
         .counter-val { font-size: 1.2rem; color: #fff; font-weight: 900; }
         
+        /* تنسيق الحدث التاريخي الهجري والميلادي */
         .hijri-event-tag { font-size: 0.75rem; color: #000; background: var(--gold); padding: 4px 10px; border-radius: 4px; font-weight: 900; margin-top: 8px; display: inline-block; animation: flash 2s infinite; line-height: 1.4; }
 
         .announcement-card { background: rgba(20, 20, 20, 0.85); border: 1px solid var(--gold); border-radius: 20px; padding: 20px; margin-bottom: 25px; text-align: right; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
@@ -77,6 +76,7 @@
         .video-box iframe { width: 100%; height: 100%; border: none; }
         .v-icon { position: absolute; top: 10px; left: 10px; color: var(--gold); font-size: 1.2rem; }
         
+        /* تنسيق الأزرار الاجتماعية المحفزة */
         .social-call { text-align: center; margin: 20px 0; background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 20px; border: 1px dashed var(--gold); }
         .social-call h4 { margin: 0 0 10px 0; font-family: 'Cairo'; color: var(--gold); font-size: 0.9rem; }
         .social-row { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
@@ -116,6 +116,7 @@
         .preview-img-circle { width: 50px; height: 50px; border-radius: 50%; border: 2px solid var(--gold); object-fit: cover; display: none; margin-bottom: 5px; }
         #audioPreview { width: 100%; height: 30px; margin-top: 8px; display: none; }
 
+        /* قسم الشروط الجديد */
         .rules-box { background: rgba(255, 204, 51, 0.05); border: 1px solid var(--gold); border-radius: 15px; padding: 15px; margin-top: 20px; text-align: right; }
         .rules-title { color: var(--gold); font-weight: 900; font-size: 0.95rem; margin-bottom: 10px; display: block; }
         .rules-list { list-style: none; padding: 0; margin: 0; font-size: 0.85rem; color: #ccc; line-height: 1.5; }
@@ -176,8 +177,8 @@
     <div class="sponsors-section animate__animated animate__fadeInDown">
         <span class="sponsors-title">هذه المسابقة برعاية</span>
         <div class="sponsors-logos">
-            <img src="https://i.ibb.co/fY15QqQT/logo1.png" alt="Sponsor 1">
-            <img src="https://i.ibb.co/LDxX15Tt/logo2.png" alt="Sponsor 2">
+            <img src="https://ibb.co/fY15QqQT" alt="Sponsor 1" onerror="this.src='https://i.ibb.co/fY15QqQT/logo1.png'">
+            <img src="https://ibb.co/LDxX15Tt" alt="Sponsor 2" onerror="this.src='https://i.ibb.co/LDxX15Tt/logo2.png'">
         </div>
     </div>
 
@@ -317,25 +318,23 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
 <script>
-    // تسجيل السيرفس ووركر للتطبيق
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('sw.js');
-      });
-    }
-
     const canvas = document.getElementById('interactive-bg');
     const ctx = canvas.getContext('2d');
     let particlesArray;
+
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
+
     let mouse = { x: null, y: null, radius: (canvas.height/80) * (canvas.width/80) };
     window.addEventListener('mousemove', function(event) { mouse.x = event.x; mouse.y = event.y; });
+
     class Particle {
         constructor(x, y, directionX, directionY, size, color) {
             this.x = x; this.y = y; this.directionX = directionX; this.directionY = directionY; this.size = size; this.color = color;
         }
-        draw() { ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false); ctx.fillStyle = '#ffcc33'; ctx.fill(); }
+        draw() {
+            ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false); ctx.fillStyle = '#ffcc33'; ctx.fill();
+        }
         update() {
             if (this.x > canvas.width || this.x < 0) this.directionX = -this.directionX;
             if (this.y > canvas.height || this.y < 0) this.directionY = -this.directionY;
@@ -343,6 +342,7 @@
             this.draw();
         }
     }
+
     function init() {
         particlesArray = [];
         let numberOfParticles = (canvas.height * canvas.width) / 9000;
@@ -352,19 +352,44 @@
             let y = (Math.random() * ((innerHeight - size * 2) - (size * 2)) + size * 2);
             let directionX = (Math.random() * 2) - 1;
             let directionY = (Math.random() * 2) - 1;
-            particlesArray.push(new Particle(x, y, directionX, directionY, size, '#ffcc33'));
+            let color = '#ffcc33';
+            particlesArray.push(new Particle(x, y, directionX, directionY, size, color));
         }
     }
-    function animate() { requestAnimationFrame(animate); ctx.clearRect(0,0,innerWidth, innerHeight); for (let i = 0; i < particlesArray.length; i++) { particlesArray[i].update(); } }
+
+    function animate() {
+        requestAnimationFrame(animate);
+        ctx.clearRect(0,0,innerWidth, innerHeight);
+        for (let i = 0; i < particlesArray.length; i++) { particlesArray[i].update(); }
+    }
+
     window.addEventListener('resize', function(){ canvas.width = innerWidth; canvas.height = innerHeight; init(); });
     init(); animate();
 
-    const opLogos = { "010": "https://upload.wikimedia.org/wikipedia/commons/a/af/Vodafone_Logo.png", "011": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Etisalat_Logo.svg/1200px-Etisalat_Logo.svg.png", "012": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/Orange_logo.svg/1024px-Orange_logo.svg.png", "015": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/WE_logo.svg/1200px-WE_logo.svg.png" };
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbyFuMa99FTBcykVxdxd_0Stn2mQqeb9vE5ArZY39kQCyXNaALYcXsg5plbdpbjlUmXhsQ/exec';
+    
+    const opLogos = {
+        "010": "https://upload.wikimedia.org/wikipedia/commons/a/af/Vodafone_Logo.png",
+        "011": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Etisalat_Logo.svg/1200px-Etisalat_Logo.svg.png",
+        "012": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/Orange_logo.svg/1024px-Orange_logo.svg.png",
+        "015": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/WE_logo.svg/1200px-WE_logo.svg.png"
+    };
+
     document.getElementById('phone').addEventListener('input', function(e) {
         const val = e.target.value.replace(/\s+/g, '');
         const opLogo = document.getElementById('opLogo');
-        let prefix = val.startsWith('01') ? val.substring(0, 3) : "";
-        if (opLogos[prefix]) { opLogo.src = opLogos[prefix]; opLogo.style.display = 'inline-block'; } else { opLogo.style.display = 'none'; }
+        let prefix = "";
+        
+        if (val.startsWith('01')) prefix = val.substring(0, 3);
+        else if (val.startsWith('201')) prefix = "0" + val.substring(2, 4);
+        else if (val.startsWith('1')) prefix = "0" + val.substring(0, 2);
+
+        if (opLogos[prefix]) { 
+            opLogo.src = opLogos[prefix]; 
+            opLogo.style.display = 'inline-block'; 
+        } else { 
+            opLogo.style.display = 'none'; 
+        }
     });
 
     function previewImage(input) {
@@ -372,42 +397,162 @@
             const reader = new FileReader();
             reader.onload = function(e) {
                 document.getElementById('imgIcon').style.display = 'none';
-                const preview = document.getElementById('imgPreview'); preview.src = e.target.result; preview.style.display = 'block';
+                const preview = document.getElementById('imgPreview');
+                preview.src = e.target.result; preview.style.display = 'block';
                 document.getElementById('imgT').innerHTML = "✅ تم استلام صورتك";
             };
             reader.readAsDataURL(input.files[0]);
         }
     }
+
     function previewAudio(input) {
         if (input.files && input.files[0]) {
-            const audioPreview = document.getElementById('audioPreview'); audioPreview.src = URL.createObjectURL(input.files[0]); audioPreview.style.display = 'block';
-            document.getElementById('audioIcon').style.display = 'none'; document.getElementById('fileT').innerHTML = "🎧 استمع لتسجيلك";
+            const audioPreview = document.getElementById('audioPreview');
+            const fileURL = URL.createObjectURL(input.files[0]);
+            audioPreview.src = fileURL; audioPreview.style.display = 'block';
+            document.getElementById('audioIcon').style.display = 'none';
+            document.getElementById('fileT').innerHTML = "🎧 استمع لتسجيلك الآن";
         }
     }
 
     function initLiveInfo() {
+        const hijriEvents = {
+            "1/1": "رأس السنة الهجرية", "10/1": "يوم عاشوراء", "12/3": "المولد النبوي الشريف",
+            "27/7": "ذكرى الإسراء والمعراج", "1/9": "أول أيام شهر رمضان", "17/9": "ذكرى غزوة بدر الكبرى",
+            "1/10": "عيد الفطر المبارك", "10/12": "عيد الأضحى المبارك"
+        };
+
+        const miladiEvents = {
+            "1/1": "بداية العام الميلادي", "7/1": "عيد الميلاد المجيد", "25/1": "عيد الشرطة المصرية",
+            "21/3": "يوم الأم", "25/4": "تحرير سيناء", "1/5": "عيد العمال", "30/6": "ذكرى ثورة 30 يونيو",
+            "23/7": "ذكرى ثورة 23 يوليو", "6/10": "انتصارات أكتوبر المجيدة", "18/12": "يوم اللغة العربية"
+        };
+
         const updateClock = () => {
             const now = new Date();
             document.getElementById('liveTime').innerText = now.toLocaleTimeString('ar-EG');
-            document.getElementById('combinedDate').innerHTML = now.toLocaleDateString('ar-EG', {day:'numeric', month:'long', year:'numeric'}) + " م";
+            
+            const hijriFull = new Intl.DateTimeFormat('ar-SA-u-ca-islamic-umalqura-nu-latn', {day:'numeric', month:'long', year:'numeric'}).format(now);
+            const miladiDayMonth = now.toLocaleDateString('ar-EG', {day:'numeric', month:'long'});
+            document.getElementById('combinedDate').innerHTML = hijriFull + "<br>" + miladiDayMonth + " 2026 م";
+
+            const mDay = now.getDate();
+            const mMonth = now.getMonth() + 1;
+            const mKey = `${mDay}/${mMonth}`;
+
+            const parts = new Intl.DateTimeFormat('en-u-ca-islamic-umalqura-nu-latn', {day:'numeric', month:'numeric'}).formatToParts(now);
+            const hDay = parts.find(p => p.type === 'day').value;
+            const hMonth = parts.find(p => p.type === 'month').value;
+            const hKey = `${hDay}/${hMonth}`;
+
+            let eventStr = "";
+            if (hijriEvents[hKey]) eventStr = "اليوم: " + hijriEvents[hKey];
+            else if (miladiEvents[mKey]) eventStr = "حدث اليوم: " + miladiEvents[mKey];
+            else eventStr = "يوم مبارك من أيام الله";
+            
+            document.getElementById('hijriEvent').innerText = eventStr;
         };
         updateClock(); setInterval(updateClock, 1000);
     }
     initLiveInfo();
 
-    const quranMap = [ ["الفاتحة",7,1],["البقرة",286,2],["يس",83,440],["الواقعة",96,534],["الملك",30,562],["النبأ",40,582],["الإخلاص",4,604] ];
+    const quranMap = [
+    ["الفاتحة",7,1],["البقرة",286,2],["آل عمران",200,50],["النساء",176,77],["المائدة",120,106],["الأنعام",165,128],["الأعراف",206,151],["الأنفال",75,177],["التوبة",129,187],["يونس",109,208],["هود",123,221],["يوسف",111,235],["الرعد",43,249],["إبراهيم",52,255],["الحجر",99,262],["النحل",128,267],["الإسراء",111,282],["الكهف",110,293],["مريم",98,305],["طه",135,312],["الأنبياء",112,322],["الحج",78,332],["المؤمنون",118,342],["النور",64,350],["الفرقان",77,359],["الشعراء",227,367],["النمل",93,377],["القصص",88,385],["العنكبوت",69,396],["الروم",60,404],["لقمان",34,411],["السجدة",30,415],["الأحزاب",73,418],["سبأ",54,428],["فاطر",45,434],["يس",83,440],["الصافات",182,446],["ص",88,453],["الزمر",75,458],["غافر",85,467],["فصلت",54,477],["الشورى",53,483],["الزخرف",89,489],["الدخان",59,496],["الجاثية",37,499],["الأحقاف",35,502],["محمد",38,507],["الفتح",29,511],["الحجرات",18,515],["ق",45,518],["الذاريات",60,520],["الطور",49,523],["النجم",62,526],["القمر",55,528],["الرحمن",78,531],["الواقعة",96,534],["الحديد",29,537],["المجادلة",22,542],["الحشر",24,545],["الممتحنة",13,549],["الصف",14,551],["الجمعة",11,553],["المنافقون",11,554],["التغابن",18,556],["الطلاق",12,558],["التحريم",12,560],["الملك",30,562],["القلم",52,564],["الحاقة",52,566],["المعارج",44,568],["نوح",28,570],["الجن",28,572],["المزمل",20,574],["المدثر",56,575],["القيامة",40,577],["الإنسان",31,578],["المرسلات",50,580],["النبأ",40,582],["النازعات",46,583],["عبس",42,585],["التكوير",29,586],["الانفطار",19,587],["المطففين",36,587],["الانشقاق",25,589],["البروج",22,590],["الطارق",17,591],["الأعلى",19,591],["الغاشية",26,592],["الفجر",30,593],["البلد",20,594],["الشمس",15,595],["الليل",21,595],["الضحى",11,596],["الشرح",8,596],["التين",8,597],["العلق",19,597],["القدر",5,598],["البينة",8,598],["الزلزلة",8,599],["العاديات",11,599],["القارعة",11,600],["التكاثر",8,600],["العصر",3,601],["الهمزة",9,601],["الفيل",5,601],["قريش",4,602],["الماعون",7,602],["الكوثر",3,602],["الكافرون",6,603],["النصر",3,603],["المسد",5,603],["الإخلاص",4,604],["الفلق",5,604],["الناس",6,604]
+    ];
+        
+
     const surahSelect = document.getElementById('surah');
-    quranMap.forEach(s => { surahSelect.add(new Option(s[0], s[0])); });
+    quranMap.forEach(s => { let opt = new Option(s[0], s[0]); surahSelect.add(opt); });
+
     function fillQuranData() {
         const selected = quranMap.find(s => s[0] === surahSelect.value);
-        const populate = (id, max, start = 1) => { const el = document.getElementById(id); el.innerHTML = ""; for(let i=start; i<=max; i++) { el.add(new Option(i, i)); } };
-        populate('ayahFrom', selected[1]); populate('ayahTo', selected[1]);
-        populate('pageFrom', 604, selected[2]); populate('pageTo', 604, selected[2]);
+        const [name, ayahs, startPage] = selected;
+        const populate = (id, max, start = 1) => {
+            const el = document.getElementById(id); el.innerHTML = "";
+            for(let i=start; i<=max; i++) { el.add(new Option(i, i)); }
+        };
+        populate('ayahFrom', ayahs); populate('ayahTo', ayahs);
+        populate('pageFrom', 604, startPage); populate('pageTo', 604, startPage);
     }
-    function smartPageLink(type) { /* حساب تقريبي للصفحة */ }
 
-    const iti = window.intlTelInput(document.querySelector("#phone"), { initialCountry: "eg", separateDialCode: false });
+    function smartPageLink(type) {
+        const selectedSurah = quranMap.find(s => s[0] === surahSelect.value);
+        if(!selectedSurah) return;
+        const startPage = selectedSurah[2];
+        if(type === 'from') {
+            const val = parseInt(document.getElementById('ayahFrom').value);
+            let estimatedPage = startPage + Math.floor(val / 15);
+            document.getElementById('pageFrom').value = estimatedPage > 604 ? 604 : (estimatedPage || startPage);
+        } else {
+            const val = parseInt(document.getElementById('ayahTo').value);
+            let estimatedPage = startPage + Math.floor(val / 15);
+            document.getElementById('pageTo').value = estimatedPage > 604 ? 604 : (estimatedPage || startPage);
+        }
+    }
+
+    const phoneInput = document.querySelector("#phone");
+    const iti = window.intlTelInput(phoneInput, {
+        initialCountry: "eg",
+        preferredCountries: ["eg", "sa", "ae", "kw", "om", "jo"],
+        autoPlaceholder: "aggressive",
+        separateDialCode: false,
+        utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+    });
+
+    const mixedInfo = [
+        { type: "من هدي النبوة..", text: "قال ﷺ: 'الذي يقرأ القرآن وهو ماهر به مع السفرة الكرام البررة'.. كن ماهراً باتباع قواعد التجويد." },
+        { type: "إشراقة قرآنية..", text: "قال تعالى: 'وَرَتِّلِ الْقُرْآنَ تَرْتِيلًا'.. الترتيل هو تجويد الحروف ومعرفة الوقوف، فاحرص على الإتقان." },
+        { type: "من هدي النبوة..", text: "قال ﷺ: 'زَيِّنُوا الْقُرْآنَ بِأَصْوَاتِكُمْ'.. صوتك الحسن هو زينة لكلام الله، فأخرجه في أفضل صورة." },
+        { type: "إشراقة قرآنية..", text: "الحرف الواحد بعشر حسنات، فكيف بمن يتقن مخارج الحروف ويراعي أحكام المد والغنة؟" },
+        { type: "من هدي النبوة..", text: "قال ﷺ: 'ليس منا من لم يتغنَّ بالقرآن'.. والتغني هنا هو تحسين الصوت بخشوع وتدبر." },
+        { type: "نصيحة إتقان..", text: "لا تتعجل في القراءة، فالقرآن يُقرأ بتؤدة وطمأنينة لتصل معانيه إلى القلوب." },
+        { type: "إشراقة قرآنية..", text: "أهل القرآن هم صفوة الخلق، فاجعل نيتك خالصة لله عند إرسال تلاوتك." },
+        { type: "تنبيه هام..", text: "هل اشتركت في قناتنا؟ يتم نشر التلاوات المتقنة يومياً لتكون قدوة لغيرك في الإتقان." }
+    ];
 
     document.getElementById('talentForm').onsubmit = async function(e) {
         e.preventDefault();
-        alert("✅ تم استلام تلاوتكم المباركة
+        let fullNumber = iti.getNumber();
+        if (!iti.isValidNumber()) { alert("يرجى التأكد من كتابة رقم هاتف صحيح"); return; }
+        const overlay = document.getElementById('loadingOverlay');
+        const progText = document.getElementById('progressText');
+        overlay.style.display = 'flex';
+        let idx = 0;
+        const updateContent = () => {
+            const item = mixedInfo[idx];
+            document.getElementById('quizQ').innerText = item.type;
+            document.getElementById('quizA').style.opacity = 0;
+            setTimeout(() => { document.getElementById('quizA').innerText = item.text; document.getElementById('quizA').style.opacity = 1; }, 300);
+            idx = (idx + 1) % mixedInfo.length;
+        };
+        updateContent(); const contentInt = setInterval(updateContent, 4000); // تحديث كل 4 ثواني
+
+        try {
+            const photoBase64 = await toBase64(document.getElementById('imgIn').files[0]);
+            const audioBase64 = await toBase64(document.getElementById('fileIn').files[0]);
+            const formData = new URLSearchParams();
+            formData.append("Name", document.getElementById('name').value);
+            formData.append("Phone", fullNumber);
+            formData.append("Surah", document.getElementById('surah').value);
+            formData.append("AyahFrom", document.getElementById('ayahFrom').value);
+            formData.append("AyahTo", document.getElementById('ayahTo').value);
+            formData.append("PageFrom", document.getElementById('pageFrom').value);
+            formData.append("PageTo", document.getElementById('pageTo').value);
+            formData.append("photoData", photoBase64.split(',')[1]);
+            formData.append("audioData", audioBase64.split(',')[1]);
+
+            let p = 0; const pInt = setInterval(() => { if(p < 90) { p += 2; progText.innerText = p + "%"; } }, 200);
+            const response = await fetch(scriptURL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: formData.toString() });
+            
+            clearInterval(pInt); clearInterval(contentInt); progText.innerText = "100%";
+            setTimeout(() => { alert("✅ تم استلام تلاوتكم المباركة بنجاح.. تذكر أن الإتقان هو سر القبول!"); location.reload(); }, 800);
+        } catch (err) { overlay.style.display = 'none'; clearInterval(contentInt); alert("حدث خطأ تقني، يرجى التأكد من اتصال الإنترنت وحجم الملفات."); }
+    };
+
+    const toBase64 = file => new Promise((resolve, reject) => {
+        const reader = new FileReader(); reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result); reader.onerror = error => reject(error);
+    });
+</script>
+</body>
+                </html>
