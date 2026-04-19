@@ -1,0 +1,17 @@
+{
+  "name": "مسابقة داعم المواهب للقرآن الكريم",
+  "short_name": "داعم المواهب",
+  "description": "تطبيق مسابقة القرآن الكريم برعاية عبد الرحمن مكي",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#ffcc33",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "https://i.postimg.cc/0yZxfgx2/Picsart-26-01-13-17-01-28-072.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
