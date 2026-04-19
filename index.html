@@ -4,16 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>مسابقة داعم المواهب للقران الكريم</title>
-    
+
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#ffcc33">
-    <script>
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('sw.js');
-        });
-      }
-    </script>
+
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@700;900&family=Almarai:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css">
@@ -21,4 +15,399 @@
     
     <style>
         :root { --gold: #ffcc33; --gold-glow: rgba(255, 204, 51, 0.5); }
-        /* باقي استايلاتك زي ما هي بالظبط بدون أي تغيير */
+        
+        body {
+            font-family: 'Almarai', sans-serif;
+            margin: 0; color: #fff;
+            background: #000;
+            min-height: 100vh; padding: 20px 0 120px 0;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        #interactive-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .container { width: 92%; max-width: 500px; margin: auto; transition: 0.3s; position: relative; z-index: 5; }
+        @media (min-width: 768px) {
+            .container { max-width: 700px; }
+            .form-card { padding: 35px; }
+        }
+        
+        .header-section { text-align: center; margin-bottom: 25px; }
+        .logo-main { width: 130px; filter: drop-shadow(0 0 15px var(--gold-glow)); animation: pulse 2s infinite; }
+        .site-name { font-family: 'Cairo'; color: var(--gold); font-size: 1.3rem; margin-top: 10px; }
+        .quran-verse { font-family: 'Cairo'; font-size: 1.8rem; margin: 15px 0; color: #fff; font-weight: 900; text-shadow: 0 0 10px var(--gold-glow); }
+
+        .sponsors-section { text-align: center; margin-bottom: 25px; background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 20px; border: 1px solid rgba(255, 204, 51, 0.3); }
+        .sponsors-title { color: var(--gold); font-size: 0.85rem; margin-bottom: 10px; display: block; font-weight: bold; }
+        .sponsors-logos { display: flex; justify-content: center; align-items: center; gap: 20px; }
+        .sponsors-logos img { height: 60px; object-fit: contain; filter: drop-shadow(0 0 5px rgba(255,255,255,0.2)); transition: 0.3s; }
+        .sponsors-logos img:hover { transform: scale(1.1); }
+
+        .info-bar { background: rgba(0, 0, 0, 0.8); border: 1px solid var(--gold); border-radius: 20px; padding: 15px; margin-bottom: 25px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; text-align: center; backdrop-filter: blur(10px); }
+        .info-item { display: flex; flex-direction: column; justify-content: center; transition: 0.3s; }
+        .info-item:hover { transform: scale(1.05); }
+        .info-item i { color: var(--gold); margin-bottom: 5px; font-size: 1.2rem; }
+        .info-val { font-family: 'Cairo'; font-weight: 700; font-size: 0.85rem; color: #fff; }
+        .time-display { font-size: 1.1rem; color: var(--gold); font-weight: 900; letter-spacing: 1px; }
+        .counter-val { font-size: 1.2rem; color: #fff; font-weight: 900; }
+        
+        .hijri-event-tag { font-size: 0.75rem; color: #000; background: var(--gold); padding: 4px 10px; border-radius: 4px; font-weight: 900; margin-top: 8px; display: inline-block; animation: flash 2s infinite; line-height: 1.4; }
+
+        .announcement-card { background: rgba(20, 20, 20, 0.85); border: 1px solid var(--gold); border-radius: 20px; padding: 20px; margin-bottom: 25px; text-align: right; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
+        .ann-title { color: var(--gold); font-family: 'Cairo'; font-weight: 900; font-size: 1.1rem; margin-bottom: 12px; display: flex; align-items: center; gap: 10px; }
+        .ann-text { font-size: 0.95rem; line-height: 1.6; color: #ddd; margin-bottom: 15px; }
+        .criteria-list { list-style: none; padding: 0; margin: 0; }
+        .criteria-list li { margin-bottom: 10px; display: flex; align-items: flex-start; gap: 10px; font-size: 0.9rem; }
+        .criteria-list i { color: var(--gold); margin-top: 4px; font-size: 0.85rem; }
+        .ann-footer { border-top: 1px solid rgba(255,204,51,0.2); padding-top: 10px; margin-top: 10px; font-weight: bold; color: var(--gold); font-size: 0.9rem; text-align: center; }
+
+        .motivational-box { text-align: center; background: rgba(255, 204, 51, 0.08); border-right: 4px solid var(--gold); padding: 15px; margin-bottom: 25px; border-radius: 0 15px 15px 0; backdrop-filter: blur(2px); position: relative; overflow: hidden; }
+        .motivational-box p { font-size: 1.05rem; color: #eee; line-height: 1.6; margin: 0; font-weight: bold; z-index: 2; position: relative; }
+        .motivational-box::before { content: '\f687'; font-family: 'Font Awesome 6 Free'; font-weight: 900; position: absolute; left: -10px; top: 50%; transform: translateY(-50%); font-size: 4rem; color: rgba(255,204,51,0.05); }
+
+        .video-label { color: var(--gold); font-size: 0.9rem; margin-bottom: 10px; display: block; text-align: center; font-weight: bold; }
+        .video-box { border: 2px solid var(--gold); border-radius: 20px; overflow: hidden; aspect-ratio: 16/9; box-shadow: 0 0 20px var(--gold-glow); margin-bottom: 20px; position: relative; transition: 0.3s; }
+        .video-box:hover { transform: scale(1.02); }
+        .video-box iframe { width: 100%; height: 100%; border: none; }
+        .v-icon { position: absolute; top: 10px; left: 10px; color: var(--gold); font-size: 1.2rem; }
+        
+        .social-call { text-align: center; margin: 20px 0; background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 20px; border: 1px dashed var(--gold); }
+        .social-call h4 { margin: 0 0 10px 0; font-family: 'Cairo'; color: var(--gold); font-size: 0.9rem; }
+        .social-row { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+        .s-box { background: #000; width: 55px; height: 55px; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-decoration: none; border: 2px solid var(--gold); transition: 0.4s; position: relative; }
+        .s-box i { font-size: 1.4rem; color: var(--gold); }
+        .s-box span { font-size: 0.55rem; color: #fff; margin-top: 2px; font-weight: bold; }
+        .s-box:hover { background: var(--gold); transform: translateY(-5px); }
+        .s-box:hover i, .s-box:hover span { color: #000; }
+        .s-box.youtube:hover { box-shadow: 0 0 20px #ff0000; border-color: #ff0000; }
+        .s-box.facebook:hover { box-shadow: 0 0 20px #1877f2; border-color: #1877f2; }
+        
+        .form-card { background: rgba(10, 10, 10, 0.95); border: 2px solid var(--gold); padding: 25px; border-radius: 25px; text-align: center; backdrop-filter: blur(15px); box-shadow: 0 10px 40px rgba(0,0,0,0.8); transition: 0.4s; }
+        .form-card:hover { border-color: #fff; box-shadow: 0 0 30px var(--gold-glow); }
+        .field { text-align: right; margin-bottom: 15px; position: relative; }
+        .field label { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; color: var(--gold); font-size: 0.9rem; font-weight: bold; }
+        
+        .input-w-icon { position: relative; }
+        .input-w-icon i:not(.iti__icon) { position: absolute; right: 12px; top: 12px; color: var(--gold); font-size: 0.9rem; z-index: 2; transition: 0.3s; }
+        .field input, .field select { width: 100%; padding: 12px 35px 12px 12px; background: #000; border: 1px solid #333; color: #fff; border-radius: 10px; outline: none; box-sizing: border-box; transition: 0.3s; }
+        .field input:focus, .field select:focus { border-color: var(--gold); box-shadow: 0 0 10px var(--gold-glow); transform: translateY(-2px); }
+
+        .operator-label-logo { height: 22px; display: none; vertical-align: middle; margin-right: 10px; animation: bounceIn 0.5s; border-radius: 3px; }
+        
+        .iti { width: 100%; direction: ltr; }
+        .iti__selected-dial-code { display: none !important; }
+        .iti__country-list { background-color: #111; color: #fff; text-align: left; border: 1px solid var(--gold); }
+        .iti__selected-flag { background: rgba(255,255,255,0.1); border-radius: 10px 0 0 10px; }
+
+        .flex-row { display: flex; gap: 10px; }
+        .flex-row .field { flex: 1; }
+
+        .upload-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 20px 0; }
+        .upload-item { border: 1px dashed var(--gold); padding: 12px; border-radius: 12px; cursor: pointer; transition: 0.3s; display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(255,204,51,0.05); min-height: 100px; position: relative; overflow: hidden; }
+        .upload-item:hover { background: rgba(255, 204, 51, 0.1); transform: translateY(-3px); border-style: solid; }
+        .upload-item i { font-size: 1.4rem; color: var(--gold); margin-bottom: 5px; }
+        
+        .preview-img-circle { width: 50px; height: 50px; border-radius: 50%; border: 2px solid var(--gold); object-fit: cover; display: none; margin-bottom: 5px; }
+        #audioPreview { width: 100%; height: 30px; margin-top: 8px; display: none; }
+
+        .rules-box { background: rgba(255, 204, 51, 0.05); border: 1px solid var(--gold); border-radius: 15px; padding: 15px; margin-top: 20px; text-align: right; }
+        .rules-title { color: var(--gold); font-weight: 900; font-size: 0.95rem; margin-bottom: 10px; display: block; }
+        .rules-list { list-style: none; padding: 0; margin: 0; font-size: 0.85rem; color: #ccc; line-height: 1.5; }
+        .rules-list li { margin-bottom: 5px; display: flex; gap: 8px; }
+        .rules-list i { color: var(--gold); font-size: 0.7rem; margin-top: 5px; }
+        .trust-tag { color: var(--gold); font-weight: bold; font-size: 0.85rem; margin-top: 10px; display: block; text-align: center; border: 1px dashed var(--gold); padding: 5px; border-radius: 8px; }
+
+        .main-btn { width: 100%; background: linear-gradient(45deg, #ffcc33, #e6b800); color: #000; padding: 16px; border: none; border-radius: 50px; font-family: 'Cairo'; font-weight: 900; font-size: 1.2rem; cursor: pointer; transition: 0.4s; position: relative; overflow: hidden; box-shadow: 0 5px 15px rgba(255,204,51,0.3); margin-top: 20px; }
+        .main-btn:hover { box-shadow: 0 0 30px var(--gold); transform: translateY(-2px) scale(1.02); letter-spacing: 1px; }
+
+        .footer-credit { text-align: center; margin-top: 40px; }
+        .footer-credit .name { color: var(--gold); font-family: 'Cairo'; font-size: 1.3rem; display: block; margin-bottom: 5px; }
+        .footer-credit .pray { color: #888; font-size: 0.9rem; }
+        .quran-final-verse { color: var(--gold); font-family: 'Cairo'; font-size: 1.5rem; font-weight: 900; margin-top: 30px; text-shadow: 0 0 10px var(--gold-glow); animation: fadeIn 3s infinite alternate; }
+
+        #loadingOverlay { 
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0,0,0,0.98); z-index: 9999; justify-content: center; align-items: center; 
+            flex-direction: column; text-align: center; padding: 20px;
+        }
+        #progressText { color: var(--gold); font-size: 3.5rem; font-weight: 900; margin-bottom: 10px; font-family: 'Cairo'; }
+
+        #quizBox { border: 2px solid var(--gold); padding: 25px; border-radius: 20px; background: #111; max-width: 320px; width: 90%; }
+        #quizQ { color: var(--gold); font-size: 1.1rem; font-weight: bold; margin-bottom: 15px; }
+        #quizA { color: #fff; font-size: 1.1rem; opacity: 0; transition: 0.8s; line-height: 1.6; }
+
+        .fixed-call-btn { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 420px; z-index: 1000; background: #000; border: 2px solid var(--gold); border-radius: 50px; padding: 15px; display: flex; align-items: center; justify-content: center; gap: 12px; text-decoration: none; box-shadow: 0 0 20px var(--gold-glow); transition: 0.3s; }
+        .fixed-call-btn:hover { background: #111; transform: translateX(-50%) scale(1.02); }
+        .fixed-call-btn span { color: #fff; font-family: 'Cairo'; font-size: 0.95rem; }
+        .fixed-call-btn i { color: var(--gold); animation: shake 2s infinite; }
+
+        @keyframes shake { 0%, 100% { transform: rotate(0); } 20% { transform: rotate(10deg); } 40% { transform: rotate(-10deg); } 60% { transform: rotate(10deg); } 80% { transform: rotate(-10deg); } }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+        @keyframes flash { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
+    </style>
+</head>
+<body>
+
+<canvas id="interactive-bg"></canvas>
+
+<div id="loadingOverlay">
+    <div id="progressText">0%</div>
+    <div style="color:var(--gold); margin-bottom:20px;"><i class="fas fa-quran fa-spin fa-2x"></i></div>
+    <div id="quizBox">
+        <p style="color:#888; font-size:0.8rem; margin-top:0;"><i class="fas fa-cloud-upload-alt"></i> جاري رفع تلاوتكم المباركة..</p>
+        <div id="quizQ">بستان المؤمن..</div>
+        <div id="quizA">...</div>
+    </div>
+</div>
+
+<div class="container animate__animated animate__fadeIn">
+    <div class="header-section">
+        <img src="https://i.postimg.cc/0yZxfgx2/Picsart-26-01-13-17-01-28-072.png" class="logo-main">
+        <div class="site-name"><i class="fas fa-star"></i> مسابقة داعم المواهب للقرآن الكريم <i class="fas fa-star"></i></div>
+        <div class="quran-verse">وَرَتِّلِ الْقُرْآنَ تَرْتِيلًا</div>
+    </div>
+
+    <div class="sponsors-section animate__animated animate__fadeInDown">
+        <span class="sponsors-title">هذه المسابقة برعاية</span>
+        <div class="sponsors-logos">
+            <img src="https://i.ibb.co/fY15QqQT/logo1.png" alt="Sponsor 1">
+            <img src="https://i.ibb.co/LDxX15Tt/logo2.png" alt="Sponsor 2">
+        </div>
+    </div>
+
+    <div class="info-bar animate__animated animate__zoomIn">
+        <div class="info-item" style="border-left: 1px solid rgba(255,204,51,0.3)">
+            <i class="fas fa-calendar-check"></i>
+            <span id="liveTime" class="time-display">00:00:00</span>
+            <span id="combinedDate" class="info-val" style="color: var(--gold); margin-top:5px; font-weight: 900;">-- -- ----</span>
+            <span id="hijriEvent" class="hijri-event-tag">حدث اليوم التاريخي</span>
+        </div>
+        <div class="info-item">
+            <i class="fas fa-heart"></i>
+            <span id="userCounter" class="counter-val"></span>
+            <span class="info-val"> صوتك نديّ فلا تحرمنا من سماعه، شاركنا تلاوتك الان </span>
+        </div>
+    </div>
+
+    <div class="motivational-box animate__animated animate__fadeInLeft">
+        <p>"أهل القرآن هم أهل الله وخاصته.. صوتك الجميل أمانة ونور، شاركنا تلاوتك الآن لعلها تكون سبباً في هداية غيرك."</p>
+    </div>
+
+    <div class="video-card animate__animated animate__fadeInUp">
+        <span class="video-label"><i class="fas fa-play-circle"></i> ✨ نماذج مختارة من تلاوات القراء ✨</span>
+        <div class="video-box">
+            <i class="fab fa-youtube v-icon"></i>
+            <iframe src="https://www.youtube.com/embed/LeUouzj6wns" allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <div class="social-call animate__animated animate__pulse animate__infinite">
+        <h4><i class="fas fa-share-nodes"></i>  كن من يشاهد تلاوتك وتلاوات المبدعين</h4>
+        <div class="social-row">
+            <a href="https://facebook.com" class="s-box facebook" target="_blank">
+                <i class="fab fa-facebook-f"></i>
+                <span>فيسبوك</span>
+            </a>
+            <a href="https://youtube.com" class="s-box youtube" target="_blank">
+                <i class="fab fa-youtube"></i>
+                <span>يوتيوب</span>
+            </a>
+        </div>
+        <p style="font-size: 0.75rem; color: #aaa; margin-top: 10px;">انضم لأسرتنا على المنصات ليصل صوتك للعالم!</p>
+    </div>
+
+    <div class="announcement-card animate__animated animate__fadeInRight">
+        <div class="ann-title">
+            <i class="fas fa-bullhorn"></i>
+            <span>تنبيهات المشاركة الهامة</span>
+        </div>
+        <div class="ann-text">
+            يرجى العلم بضرورة الالتزام بمعايير الجودة لضمان قبول تلاوتك في المسابقة.
+        </div>
+        <ul class="criteria-list">
+            <li><i class="fas fa-microphone"></i> <strong>يرجى إرسال الصوت بدون مؤثرات صوتية</strong> لضمان تقييم الأداء بشكل صحيح.</li>
+            <li><i class="fas fa-check-circle"></i> يرجى التأكد من وضوح مخارج الحروف والهدوء في مكان التسجيل.</li>
+            <li><i class="fas fa-clock"></i> مدة التسجيل يجب ألا تتجاوز 3 دقائق كحد أقصى.</li>
+        </ul>
+    </div>
+
+    <div class="form-card animate__animated animate__fadeInUp">
+        <form id="talentForm">
+            <div class="field">
+                <label><i class="fas fa-id-card"></i> الاسم بالكامل</label>
+                <div class="input-w-icon"><i class="fas fa-user-edit"></i><input type="text" id="name" name="Name" required placeholder="اكتب اسمك ثلاثي كما تحب أن يظهر"></div>
+            </div>
+            
+            <div class="field">
+                <label>
+                    <i class="fab fa-whatsapp"></i> رقم الواتساب
+                    <img id="opLogo" class="operator-label-logo" src="" alt="operator">
+                </label>
+                <div class="input-w-icon">
+                    <input type="tel" id="phone" required>
+                </div>
+            </div>
+
+            <div class="field">
+                <label><i class="fas fa-book-open"></i> اسم السورة</label>
+                <div class="input-w-icon"><i class="fas fa-quran"></i>
+                <select id="surah" name="Surah" required onchange="fillQuranData()"><option value="" disabled selected>اختر السورة المباركة..</option></select></div>
+            </div>
+            <div class="flex-row">
+                <div class="field"><label><i class="fas fa-list-ol"></i> من آية</label><div class="input-w-icon"><i class="fas fa-hashtag"></i><select id="ayahFrom" name="AyahFrom" required onchange="smartPageLink('from')"></select></div></div>
+                <div class="field"><label><i class="fas fa-list-ol"></i> إلى آية</label><div class="input-w-icon"><i class="fas fa-hashtag"></i><select id="ayahTo" name="AyahTo" required onchange="smartPageLink('to')"></select></div></div>
+            </div>
+            <div class="flex-row">
+                <div class="field"><label><i class="fas fa-file-alt"></i> من صفحة</label><div class="input-w-icon"><i class="fas fa-pager"></i><select id="pageFrom" name="PageFrom" required></select></div></div>
+                <div class="field"><label><i class="fas fa-file-alt"></i> إلى صفحة</label><div class="input-w-icon"><i class="fas fa-pager"></i><select id="pageTo" name="PageTo" required></select></div></div>
+            </div>
+            
+            <div class="upload-grid">
+                <div class="upload-item" onclick="document.getElementById('imgIn').click()">
+                    <i id="imgIcon" class="fas fa-camera-retro"></i>
+                    <img id="imgPreview" class="preview-img-circle" src="">
+                    <span id="imgT">صورتك الموقرة</span>
+                    <input type="file" id="imgIn" accept="image/*" style="display:none" required onchange="previewImage(this)">
+                </div>
+                <div class="upload-item" onclick="document.getElementById('fileIn').click()">
+                    <i id="audioIcon" class="fas fa-microphone-alt"></i>
+                    <span id="fileT">تلاوتك الندية</span>
+                    <audio id="audioPreview" controls></audio>
+                    <input type="file" id="fileIn" accept="audio/*" style="display:none" required onchange="previewAudio(this)">
+                </div>
+            </div>
+
+            <div class="rules-box">
+                <span class="rules-title"><i class="fas fa-gavel"></i> معايير القبول والإتقان:</span>
+                <ul class="rules-list">
+                    <li><i class="fas fa-check-double"></i> <strong>إتقان التجويد:</strong> نركز على صحة الحركات ومخارج الحروف.</li>
+                    <li><i class="fas fa-check-double"></i> <strong>الوقار السمعي:</strong> يُفضل التسجيل في هدوء تام وبدون "صدى صوت" مبالغ فيه.</li>
+                    <li><i class="fas fa-check-double"></i> <strong>الأمانة:</strong> يمنع استخدام برامج تحسين الصوت أو الذكاء الاصطناعي لتغيير نبرة الصوت.</li>
+                    <li><i class="fas fa-check-double"></i> <strong>الالتزام:</strong> يحق للإدارة استبعاد المشارك في حال عدم مطابقة الصورة الشخصية للوقار المطلوب.</li>
+                </ul>
+                <span class="trust-tag">
+                    <i class="fas fa-user-shield"></i> 
+                    يتم التحكيم بواسطة مشايخ مجازين بالقراءات العشر لضمان نزاهة التقييم الشرعي والفني.
+                </span>
+            </div>
+            
+            <button type="submit" id="btn" class="main-btn">
+                <i class="fas fa-share-square"></i> انشر نور تلاوتك الآن (مجاناً)
+            </button>
+        </form>
+    </div>
+
+    <div class="footer-credit">
+        <div class="quran-final-verse">أَلَا بِذِكْرِ اللَّهِ تَطْمَئِنُّ الْقُلُوبُ</div>
+        <span class="name"><i class="fas fa-user-check"></i> خادم القرآن/ عبد الرحمن مكي</span>
+        <span class="pray">نسألكم الدعاء بالقبول والإخلاص <i class="fas fa-hands-praying"></i></span>
+    </div>
+</div>
+
+<a href="tel:01122783768" class="fixed-call-btn">
+    <i class="fas fa-tools"></i>
+    <span>للمشاكل الفنية اضغط هنا</span>
+</a>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
+<script>
+    // تسجيل السيرفس ووركر للتطبيق
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js');
+      });
+    }
+
+    const canvas = document.getElementById('interactive-bg');
+    const ctx = canvas.getContext('2d');
+    let particlesArray;
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    let mouse = { x: null, y: null, radius: (canvas.height/80) * (canvas.width/80) };
+    window.addEventListener('mousemove', function(event) { mouse.x = event.x; mouse.y = event.y; });
+    class Particle {
+        constructor(x, y, directionX, directionY, size, color) {
+            this.x = x; this.y = y; this.directionX = directionX; this.directionY = directionY; this.size = size; this.color = color;
+        }
+        draw() { ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false); ctx.fillStyle = '#ffcc33'; ctx.fill(); }
+        update() {
+            if (this.x > canvas.width || this.x < 0) this.directionX = -this.directionX;
+            if (this.y > canvas.height || this.y < 0) this.directionY = -this.directionY;
+            this.x += this.directionX; this.y += this.directionY;
+            this.draw();
+        }
+    }
+    function init() {
+        particlesArray = [];
+        let numberOfParticles = (canvas.height * canvas.width) / 9000;
+        for (let i = 0; i < numberOfParticles; i++) {
+            let size = (Math.random() * 2) + 1;
+            let x = (Math.random() * ((innerWidth - size * 2) - (size * 2)) + size * 2);
+            let y = (Math.random() * ((innerHeight - size * 2) - (size * 2)) + size * 2);
+            let directionX = (Math.random() * 2) - 1;
+            let directionY = (Math.random() * 2) - 1;
+            particlesArray.push(new Particle(x, y, directionX, directionY, size, '#ffcc33'));
+        }
+    }
+    function animate() { requestAnimationFrame(animate); ctx.clearRect(0,0,innerWidth, innerHeight); for (let i = 0; i < particlesArray.length; i++) { particlesArray[i].update(); } }
+    window.addEventListener('resize', function(){ canvas.width = innerWidth; canvas.height = innerHeight; init(); });
+    init(); animate();
+
+    const opLogos = { "010": "https://upload.wikimedia.org/wikipedia/commons/a/af/Vodafone_Logo.png", "011": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Etisalat_Logo.svg/1200px-Etisalat_Logo.svg.png", "012": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/Orange_logo.svg/1024px-Orange_logo.svg.png", "015": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/WE_logo.svg/1200px-WE_logo.svg.png" };
+    document.getElementById('phone').addEventListener('input', function(e) {
+        const val = e.target.value.replace(/\s+/g, '');
+        const opLogo = document.getElementById('opLogo');
+        let prefix = val.startsWith('01') ? val.substring(0, 3) : "";
+        if (opLogos[prefix]) { opLogo.src = opLogos[prefix]; opLogo.style.display = 'inline-block'; } else { opLogo.style.display = 'none'; }
+    });
+
+    function previewImage(input) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('imgIcon').style.display = 'none';
+                const preview = document.getElementById('imgPreview'); preview.src = e.target.result; preview.style.display = 'block';
+                document.getElementById('imgT').innerHTML = "✅ تم استلام صورتك";
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+    function previewAudio(input) {
+        if (input.files && input.files[0]) {
+            const audioPreview = document.getElementById('audioPreview'); audioPreview.src = URL.createObjectURL(input.files[0]); audioPreview.style.display = 'block';
+            document.getElementById('audioIcon').style.display = 'none'; document.getElementById('fileT').innerHTML = "🎧 استمع لتسجيلك";
+        }
+    }
+
+    function initLiveInfo() {
+        const updateClock = () => {
+            const now = new Date();
+            document.getElementById('liveTime').innerText = now.toLocaleTimeString('ar-EG');
+            document.getElementById('combinedDate').innerHTML = now.toLocaleDateString('ar-EG', {day:'numeric', month:'long', year:'numeric'}) + " م";
+        };
+        updateClock(); setInterval(updateClock, 1000);
+    }
+    initLiveInfo();
+
+    const quranMap = [ ["الفاتحة",7,1],["البقرة",286,2],["يس",83,440],["الواقعة",96,534],["الملك",30,562],["النبأ",40,582],["الإخلاص",4,604] ];
+    const surahSelect = document.getElementById('surah');
+    quranMap.forEach(s => { surahSelect.add(new Option(s[0], s[0])); });
+    function fillQuranData() {
+        const selected = quranMap.find(s => s[0] === surahSelect.value);
+        const populate = (id, max, start = 1) => { const el = document.getElementById(id); el.innerHTML = ""; for(let i=start; i<=max; i++) { el.add(new Option(i, i)); } };
+        populate('ayahFrom', selected[1]); populate('ayahTo', selected[1]);
+        populate('pageFrom', 604, selected[2]); populate('pageTo', 604, selected[2]);
+    }
+    function smartPageLink(type) { /* حساب تقريبي للصفحة */ }
+
+    const iti = window.intlTelInput(document.querySelector("#phone"), { initialCountry: "eg", separateDialCode: false });
+
+    document.getElementById('talentForm').onsubmit = async function(e) {
+        e.preventDefault();
+        alert("✅ تم استلام تلاوتكم المباركة
