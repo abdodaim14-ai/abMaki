@@ -324,12 +324,25 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
 <script>
-    // تسجيل الـ Service Worker لعمل الـ PWA
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('sw.js').catch(err => console.log('SW registration failed', err));
-      });
+    // --- كود الربط المطور لملف sw.js والإشعارات ---
+    if ("Notification" in window) {
+        if (Notification.permission !== "granted" && Notification.permission !== "denied") {
+            Notification.requestPermission();
+        }
     }
+
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('sw.js')
+            .then(reg => {
+                console.log('SW Registered');
+                // تحديث السيرفس وركر كل دقيقة لضمان عمل setInterval داخله
+                setInterval(() => { reg.update(); }, 60000);
+            })
+            .catch(err => console.log('SW registration failed', err));
+        });
+    }
+    // --- نهاية كود الربط المطور ---
 
     const canvas = document.getElementById('interactive-bg');
     const ctx = canvas.getContext('2d');
