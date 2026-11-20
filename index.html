@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI Design Studio</title><link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand"><div class="brand-mark">✦</div><div><b>AI Design Studio</b><small>استوديو التصميم الذكي</small></div></div>
+    <div class="nav-label">مساحة العمل</div>
+    <button class="nav active" data-panel="workspace">▦ <span>محرر التصميم</span></button>
+    <button class="nav" data-panel="identity">◈ <span>الهوية البصرية</span></button>
+    <button class="nav" data-panel="fonts">Aa <span>مكتبة الخطوط</span></button>
+    <button class="nav" data-panel="assistant">✧ <span>مدير التصميم AI</span></button>
+    <button class="nav" data-panel="templates">▤ <span>القوالب</span></button>
+    <div class="sidebar-bottom"><span class="status-dot"></span> النسخة التجريبية الأولى</div>
+  </aside>
+  <main class="main">
+    <header class="topbar"><div><span class="eyebrow">CREATIVE WORKSPACE</span><h1 id="pageTitle">محرر التصميم</h1></div>
+      <div class="top-actions"><button class="ghost" id="newProject">مشروع جديد</button><button class="primary" id="exportBtn">تصدير PNG ↗</button></div>
+    </header>
+
+    <section class="panel active" id="workspace">
+      <div class="editor-layout">
+        <section class="toolbox card">
+          <h3>أدوات التصميم</h3>
+          <label class="upload"><input type="file" id="imageInput" accept="image/*"><span>＋</span><b>إضافة صورة</b><small>PNG / JPG / WEBP</small></label>
+          <button class="tool-btn" id="addHeading">T&nbsp; إضافة عنوان</button>
+          <button class="tool-btn" id="addText">≡&nbsp; إضافة نص</button>
+          <button class="tool-btn" id="addRect">▰&nbsp; إضافة شكل</button>
+          <div class="field"><label>مقاس التصميم</label><select id="canvasSize"><option value="1080,1080">منشور مربع 1080 × 1080</option><option value="1080,1920">ريلز / ستوري 1080 × 1920</option><option value="1280,720">يوتيوب 1280 × 720</option><option value="1080,1350">منشور طولي 1080 × 1350</option></select></div>
+          <div class="field"><label>لون الخلفية</label><input type="color" id="bgColor" value="#111827"></div>
+          <div class="hint">اسحب العناصر داخل مساحة العمل لتحريكها. اختر العنصر لتعديل خصائصه.</div>
+        </section>
+        <section class="stage-wrap">
+          <div class="stage-toolbar"><span>لوحة الرسم</span><span id="canvasDimensions">1080 × 1080</span></div>
+          <div class="stage-scroll"><canvas id="artboard" width="1080" height="1080"></canvas></div>
+        </section>
+        <section class="properties card">
+          <h3>خصائص العنصر</h3>
+          <div id="emptyProps" class="empty">اختر عنصراً من لوحة التصميم لتعديل خصائصه.</div>
+          <div id="props" hidden>
+            <div class="field"><label>النص</label><textarea id="itemText" rows="3"></textarea></div>
+            <div class="field"><label>الخط</label><select id="itemFont"><option value="Arial">Arial</option><option value="Cairo">Cairo (إذا أضفته)</option><option value="sans-serif">Sans Serif</option></select></div>
+            <div class="field"><label>حجم الخط</label><input type="range" id="itemSize" min="12" max="180" value="72"></div>
+            <div class="field"><label>اللون</label><input type="color" id="itemColor" value="#ffffff"></div>
+            <div class="field"><label>المحاذاة</label><select id="itemAlign"><option value="center">وسط</option><option value="right">يمين</option><option value="left">يسار</option></select></div>
+            <button class="danger" id="deleteItem">حذف العنصر</button>
+          </div>
+          <hr><h3>الطبقات</h3><div id="layers" class="layers"></div>
+        </section>
+      </div>
+    </section>
+
+    <section class="panel" id="identity">
+      <div class="section-grid">
+        <div class="card">
+          <h2>حلّل هويتك البصرية</h2><p>ارفع اللوجو، وسنستخرج لوحة ألوان أولية من الصورة.</p>
+          <label class="upload large"><input type="file" id="logoInput" accept="image/*"><span>⬆</span><b>رفع اللوجو</b><small>يفضل PNG بخلفية شفافة</small></label>
+          <img id="logoPreview" class="logo-preview" alt="معاينة اللوجو" hidden>
+          <button class="primary full" id="analyzeLogo">تحليل الألوان</button>
+        </div>
+        <div class="card"><h2>لوحة ألوان الهوية</h2><p>الألوان المستخرجة أو التي تختارها بنفسك.</p><div id="palette" class="palette"></div><div class="field"><label>إضافة لون يدوي</label><input type="color" id="manualColor" value="#D4AF37"><button class="tool-btn" id="addColor">إضافة للوحة</button></div></div>
+      </div>
+    </section>
+
+    <section class="panel" id="fonts">
+      <div class="card">
+        <h2>مكتبة الخطوط</h2><p>ارفع ملفات الخطوط بصيغ TTF أو OTF أو WOFF. ستظهر معاينتها هنا ويمكن استخدامها في المحرر.</p>
+        <label class="upload large"><input type="file" id="fontInput" accept=".ttf,.otf,.woff,.woff2" multiple><span>Aa</span><b>رفع الخطوط</b><small>يمكن اختيار أكثر من خط</small></label>
+        <div id="fontList" class="font-list"></div>
+      </div>
+    </section>
+
+    <section class="panel" id="assistant">
+      <div class="card assistant-card">
+        <div class="ai-heading"><div class="ai-icon">✧</div><div><h2>مدير التصميم الذكي</h2><p>حلّل فكرتك واحصل على توجيه فني قبل التصميم.</p></div></div>
+        <div class="field"><label>ماذا تريد أن تصمم؟</label><textarea id="designBrief" rows="4" placeholder="مثال: إعلان عن مسابقة لحفظ القرآن الكريم..."></textarea></div>
+        <div class="field"><label>نوع التصميم</label><select id="designType"><option>منشور سوشيال ميديا</option><option>غلاف ريلز رأسي</option><option>صورة مصغرة لليوتيوب</option><option>بوستر إعلاني</option></select></div>
+        <button class="primary" id="getAdvice">✦ اقترح خطة تصميم</button>
+        <div id="advice" class="advice">ستظهر هنا اقتراحات الخطوط والألوان والتوزيع البصري.</div>
+        <p class="notice">ملاحظة: هذه نسخة أولية باقتراحات محلية. ربط Gemini الفعلي يحتاج إعداد مفتاح API داخل خادم آمن، وليس داخل المتصفح.</p>
+      </div>
+    </section>
+
+    <section class="panel" id="templates">
+      <div class="card"><h2>قوالب البداية</h2><p>اختر مقاساً مناسباً ثم ابدأ التصميم من لوحة الرسم.</p>
+        <div class="template-grid">
+          <button class="template" data-size="1080,1080"><b>مربع</b><span>منشورات إنستجرام وفيسبوك</span><strong>1080 × 1080</strong></button>
+          <button class="template" data-size="1080,1920"><b>رأسي</b><span>ريلز وستوري</span><strong>1080 × 1920</strong></button>
+          <button class="template" data-size="1280,720"><b>عريض</b><span>صور مصغرة لليوتيوب</span><strong>1280 × 720</strong></button>
+          <button class="template" data-size="1080,1350"><b>طولي</b><span>منشورات طولية</span><strong>1080 × 1350</strong></button>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+<div id="toast" class="toast"></div>
+<script src="app.js"></script>
+</body></html>
